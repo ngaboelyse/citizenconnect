@@ -1,5 +1,4 @@
-[providers]
-  providers = ["node"]
+providers = ["node"]
 
 [phases.build]
 cmds = ["npm install --omit=dev"]
