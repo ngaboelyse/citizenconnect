@@ -1,5 +1,5 @@
 // CitizenConnect Service Worker - enables offline & PWA install
-const CACHE_NAME = 'citizenconnect-v6';
+const CACHE_NAME = 'citizenconnect-v7';
 const ASSETS = [
   '/',
   '/login.html',
