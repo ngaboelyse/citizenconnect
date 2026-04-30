@@ -232,3 +232,5 @@ For issues or suggestions, please contact the development team.
 
 **Last Updated**: April 27, 2026  
 **Version**: 2.0 (Authentication System Added)
+#   c i t i z e n c o n n e c t  
+ 
