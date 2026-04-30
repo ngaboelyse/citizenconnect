@@ -29,6 +29,14 @@ android/
 ios/
 app/
 
+# Gradle (causes Railway to detect as Java app)
+gradlew
+gradlew.bat
+gradle/
+*.gradle
+*.gradle.kts
+local.properties
+
 # Data files (Railway uses a persistent volume instead)
 data/
 

@@ -1,5 +1,8 @@
+[providers]
+  providers = ["node"]
+
 [phases.build]
-cmds = []
+cmds = ["npm install --omit=dev"]
 
 [start]
 cmd = "node server.js"

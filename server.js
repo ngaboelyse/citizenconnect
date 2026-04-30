@@ -5,7 +5,7 @@ const path = require('path');
 const os = require('os');
 const { exec } = require('child_process');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const WWW_DIR  = path.join(__dirname, 'www');
 const DATA_DIR = path.join(__dirname, 'data');
 
