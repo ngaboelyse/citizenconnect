@@ -798,24 +798,24 @@ button,
     }
 
     .app-container {
-        max-width: 480px;
+        max-width: 1200px;
         width: 100%;
         min-height: 100vh;
         border-radius: 0;
-        box-shadow: 0 0 40px rgba(0,0,0,0.15);
+        box-shadow: none;
         background: var(--bg-color);
         position: relative;
         padding-bottom: calc(80px + var(--safe-bottom));
     }
 
     .bottom-nav {
-        max-width: 480px;
+        max-width: 1200px;
         left: 50%;
         transform: translateX(-50%);
     }
 
     .fab {
-        right: calc(50% - 240px + 20px);
+        right: calc(50% - 600px + 20px);
     }
 
     .hero {

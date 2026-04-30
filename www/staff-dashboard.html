@@ -24,7 +24,12 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
 
-        .container { max-width: 860px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        @media (min-width: 769px) {
+            body { background: #E8EDF5; }
+            .container { padding: 28px 24px; }
+        }
 
         /* Header */
         .header {
