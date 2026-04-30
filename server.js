@@ -114,18 +114,17 @@ const server = http.createServer((req, res) => {
   }
 
   // ── Static files ───────────────────────────────────────────────────────────
-  if (urlPath === '/' || urlPath === '/login') {
-    res.writeHead(302, { Location: '/login.html' });
-    res.end();
-    return;
-  }
-
-  // Strip .html extension from requests missing it
-  const htmllessPages = ['/index', '/report-form', '/admin-dashboard', '/staff-dashboard'];
-  if (htmllessPages.includes(urlPath)) {
-    res.writeHead(302, { Location: urlPath + '.html' });
-    res.end();
-    return;
+  // Map clean URLs to actual HTML files
+  const cleanUrls = {
+    '/': '/login.html',
+    '/login': '/login.html',
+    '/index': '/index.html',
+    '/report-form': '/report-form.html',
+    '/admin-dashboard': '/admin-dashboard.html',
+    '/staff-dashboard': '/staff-dashboard.html',
+  };
+  if (cleanUrls[urlPath]) {
+    urlPath = cleanUrls[urlPath];
   }
 
   const filePath = path.join(WWW_DIR, urlPath);
