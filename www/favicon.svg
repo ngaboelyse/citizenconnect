@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Rounded square background - navy blue brand color -->
+  <rect width="100" height="100" rx="20" ry="20" fill="#023469"/>
+
+  <!-- Bullhorn / megaphone body -->
+  <!-- Mouthpiece rectangle -->
+  <rect x="14" y="40" width="17" height="20" rx="3" ry="3" fill="white"/>
+
+  <!-- Horn flare (trapezoid gets wider toward right) -->
+  <polygon points="31,40 31,60 58,72 58,28" fill="white"/>
+
+  <!-- Handle / grip below mouthpiece -->
+  <rect x="16" y="60" width="11" height="15" rx="3" ry="3" fill="white" opacity="0.9"/>
+
+  <!-- Sound wave arcs -->
+  <path d="M63 37 Q75 50 63 63"
+        stroke="white" stroke-width="5.5"
+        fill="none" stroke-linecap="round"/>
+  <path d="M70 29 Q87 50 70 71"
+        stroke="white" stroke-width="4.5"
+        fill="none" stroke-linecap="round" opacity="0.65"/>
+</svg>

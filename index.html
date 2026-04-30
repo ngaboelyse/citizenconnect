@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>CitizenConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="auth.js"></script>
+    <script src="reports.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fa-solid fa-bullhorn text-primary"></i>
+                <h1>CitizenConnect</h1>
+            </div>
+            <div class="header-actions">
+                <div class="notification-icon">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="badge" id="notificationBadge"></span>
+                </div>
+                <div class="avatar" data-toggle="auth-menu">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <!-- Auth Menu -->
+                <div id="authMenu" style="display: none; position: absolute; top: 60px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; min-width: 200px;">
+                    <div style="padding: 16px; border-bottom: 1px solid #E5E7EB;">
+                        <div style="font-weight: 600;" id="userName"></div>
+                        <div style="font-size: 0.9rem; color: #6B7280;">Role: <span id="userRole" style="font-weight: 600;"></span></div>
+                        <div style="font-size: 0.85rem; color: #9CA3AF; margin-top: 4px;" id="userEmail"></div>
+                    </div>
+                    <button class="logout-btn" style="width: 100%; padding: 12px; text-align: left; border: none; background: none; cursor: pointer; color: #EF4444; font-weight: 600; border-radius: 0; transition: all 0.2s;">
+                        <i class="fa-solid fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h2>Welcome back,<br><span id="heroUserName">User</span></h2>
+                    <p>Submit issues, track progress, and help improve your community.</p>
+                </div>
+                <div class="hero-bg-buildings">
+                    <!-- City buildings shape representation -->
+                    <div class="building b1"></div>
+                    <div class="building b2"></div>
+                    <div class="building b3"></div>
+                    <div class="building b4"></div>
+                </div>
+            </section>
+
+            <!-- Stats -->
+            <section class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon icon-blue">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <div class="stat-label">Active Reports</div>
+                    <div class="stat-value text-blue">2</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-green">
+                        <i class="fa-regular fa-circle-check"></i>
+                    </div>
+                    <div class="stat-label">Resolved</div>
+                    <div class="stat-value text-green">1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-orange">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                    <div class="stat-label">Avg. Response</div>
+                    <div class="stat-value">48h</div>
+                </div>
+            </section>
+
+            <!-- Action Area -->
+            <section class="action-area" id="reportIssueSection">
+                <a href="report-form.html" style="text-decoration: none; color: inherit;">
+                    <button class="report-btn">
+                        <div class="btn-icon">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                        <h3>Report an Issue</h3>
+                        <p>Help improve our community</p>
+                    </button>
+                </a>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="recent-activity">
+                <div class="section-header">
+                    <h2>Recent Activity</h2>
+                    <a href="#" class="view-history" onclick="handleViewHistory(event)">View History <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="activity-list">
+                    <!-- Item 1 -->
+                    <div class="activity-card">
+                        <div class="activity-icon-container bg-light-blue">
+                            <i class="fa-solid fa-droplet text-blue"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Broken Water Pipe <span class="id-tag">#CR-4029</span></h4>
+                            <div class="location">
+                                <i class="fa-solid fa-location-dot"></i> 24th Maple Avenue, North District
+                            </div>
+                            <div class="status-row">
+                                <div class="status-badge badge-blue"><span class="dot dot-blue"></span> In Progress</div>
+                                <span class="time">2 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 2 -->
+                    <div class="activity-card">
+                        <div class="activity-icon-container bg-light-gray">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Street Light Out <span class="id-tag">#CR-3988</span></h4>
+                            <div class="location">
+                                <i class="fa-solid fa-location-dot"></i> Park Entrance, East Wing
+                            </div>
+                            <div class="status-row">
+                                <div class="status-badge badge-gray"><span class="dot dot-gray"></span> Pending</div>
+                                <span class="time">Yesterday</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="activity-card">
+                        <div class="activity-icon-container bg-light-gray">
+                            <i class="fa-solid fa-recycle"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Missed Trash Collection <span class="id-tag">#CR-3850</span></h4>
+                            <div class="location">
+                                <i class="fa-solid fa-location-dot"></i> Greenwood Residential
+                            </div>
+                            <div class="status-row">
+                                <div class="status-badge badge-green"><span class="dot dot-green"></span> Resolved</div>
+                                <span class="time">3 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Map -->
+            <section class="live-map">
+                <div class="map-card">
+                    <div class="map-header">
+                        <h4>Live Community Issues</h4>
+                        <p>See what's happening around you</p>
+                    </div>
+                    <!-- Using the absolute path to the generated map image -->
+                    <div class="map-view" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <button class="interactive-map-btn" onclick="handleMapClick()">
+                            <i class="fa-solid fa-compass"></i> Open Interactive Map
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Padding for bottom nav -->
+            <div style="height: 80px;"></div>
+        </main>
+
+        <!-- Floating Action Button -->
+        <a href="report-form.html" class="fab" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-regular fa-square-plus"></i>
+                <span>Report</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>History</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-regular fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

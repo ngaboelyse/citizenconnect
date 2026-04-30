@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Submit a Complaint - CitizenConnect</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#023469">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="auth.js"></script>
+    <script src="reports.js"></script>
+    <script src="script.js"></script>
+    <style>
+        :root {
+            --primary: #023469;
+            --primary-dark: #00224A;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --bg: #F8F9FB;
+            --text: #1C1F23;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Progress Indicator */
+        .progress-section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-header h3 {
+            font-size: 1rem;
+        }
+
+        .progress-header .step-count {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .form-section > p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group small {
+            color: var(--text-muted);
+            display: block;
+            margin-top: 4px;
+            font-size: 0.85rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 52, 105, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Photo Upload */
+        .photo-upload {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .photo-upload:hover {
+            border-color: var(--primary);
+            background: rgba(2, 52, 105, 0.02);
+        }
+
+        .photo-upload i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .photo-upload-text {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .photo-upload-hint {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Location Input */
+        .location-input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .location-input-group input {
+            flex: 1;
+        }
+
+        .location-btn {
+            padding: 12px 20px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .location-btn:hover {
+            border-color: var(--primary);
+            background: rgba(2, 52, 105, 0.02);
+        }
+
+        /* Map Preview */
+        .map-preview {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-preview::after {
+            content: '📍';
+            font-size: 3rem;
+            position: absolute;
+        }
+
+        /* Tips Section */
+        .tips-section {
+            background: #F3F4F6;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .tips-section h4 {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .tips-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-section li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .tips-section li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        /* Privacy Notice */
+        .privacy-notice {
+            background: #F9FAFB;
+            border-left: 4px solid var(--border);
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #001a35;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(2, 52, 105, 0.02);
+        }
+
+        /* Hidden Step */
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            .form-section { padding: 16px 14px; }
+            .form-section h2 { font-size: 1.2rem; }
+            .map-preview { height: 180px; }
+            .photo-upload { padding: 24px 16px; }
+            .photo-upload i { font-size: 2rem; }
+            .location-input-group { flex-direction: column; gap: 8px; }
+            .location-btn { width: 100%; justify-content: center; }
+            .button-group { flex-direction: column; gap: 10px; }
+            .button-group .btn { width: 100%; }
+            .header { padding: 12px 14px; }
+            .progress-section { padding: 16px 14px; margin-bottom: 16px; }
+
+            /* Prevent iOS zoom on input focus */
+            input, select, textarea { font-size: 16px !important; }
+        }
+
+        /* Desktop - center the form */
+        @media (min-width: 769px) {
+            body { background: #E8EDF5; }
+            .container {
+                max-width: 640px;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <i class="fa-solid fa-bullhorn"></i>
+                CitizenConnect
+            </div>
+            <button class="back-btn" onclick="goBack()">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h3>Step <span id="currentStep">1</span> of 5</h3>
+                <span class="step-count">Report Details</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 20%;"></div>
+            </div>
+        </div>
+
+        <!-- Step 1: Basic Info -->
+        <div class="form-section step active" id="step1">
+            <h2>Submit a Complaint</h2>
+            <p>Help us improve our community by reporting issues you encounter</p>
+
+            <form id="form1" onsubmit="nextStep(1, event)">
+                <div class="form-group">
+                    <label>Issue Category</label>
+                    <select id="reportCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="water">💧 Water & Plumbing</option>
+                        <option value="road">🛣️ Road & Transport</option>
+                        <option value="light">💡 Street Lighting</option>
+                        <option value="waste">♻️ Waste Management</option>
+                        <option value="park">🌳 Parks & Green</option>
+                        <option value="other">📝 Other</option>
+                    </select>
+                    <small>Categorizing helps us route your report to the right department</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Brief Title</label>
+                    <input type="text" id="reportTitle" placeholder="e.g. Broken streetlight on Maple Ave" required>
+                    <small>A short, descriptive title of the issue</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Detailed Description</label>
+                    <textarea id="reportDescription" placeholder="Provide as much detail as possible about the issue..." required></textarea>
+                    <small>Include when you noticed the problem and any safety concerns</small>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="goBack()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Continue</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Step 2: Visual Evidence -->
+        <div class="form-section step" id="step2">
+            <h2>Visual Evidence</h2>
+            <p>Upload a photo to help us understand the issue better (optional)</p>
+
+            <div class="photo-upload">
+                <i class="fa-solid fa-camera"></i>
+                <div class="photo-upload-text">Click to upload photo of the issue</div>
+                <div class="photo-upload-hint">PNG, JPG up to 10MB</div>
+                <input type="file" id="photoInput" accept="image/*" style="display: none;">
+            </div>
+
+            <div id="photoPreview" style="margin-top: 20px; display: none;">
+                <div style="width: 100%; height: 200px; background: #E5E7EB; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: var(--text-muted);">📸 Photo uploaded</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="previousStep(2)">Back</button>
+                <button type="button" class="btn btn-primary" onclick="nextStep(2, event)">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Location -->
+        <div class="form-section step" id="step3">
+            <h2>Location of the Issue</h2>
+            <p>Where is the issue located?</p>
+
+            <div class="form-group">
+                <label>Enter address or landmark</label>
+                <div class="location-input-group">
+                    <input type="text" id="reportLocation" placeholder="Enter address or landmark" required>
+                    <button type="button" class="location-btn" onclick="useCurrentLocation()">
+                        <i class="fa-solid fa-location-crosshairs"></i> Use Current Location
+                    </button>
+                </div>
+            </div>
+
+            <div class="map-preview"></div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="previousStep(3)">Back</button>
+                <button type="button" class="btn btn-primary" onclick="nextStep(3, event)">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Additional Info -->
+        <div class="form-section step" id="step4">
+            <h2>Additional Information</h2>
+            <p>Help us respond faster with extra details</p>
+
+            <div class="form-group">
+                <label>When did you notice this?</label>
+                <select>
+                    <option>Today</option>
+                    <option>Yesterday</option>
+                    <option>This week</option>
+                    <option>Last week</option>
+                    <option>More than a week ago</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>How does this affect you?</label>
+                <select>
+                    <option>Safety hazard</option>
+                    <option>Daily inconvenience</option>
+                    <option>Environmental concern</option>
+                    <option>General maintenance issue</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" checked> I would like updates on the resolution of this issue
+                </label>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="previousStep(4)">Back</button>
+                <button type="button" class="btn btn-primary" onclick="nextStep(4, event)">Review & Submit</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Review & Submit -->
+        <div class="form-section step" id="step5">
+            <h2>Review Your Report</h2>
+            <p>Please review your complaint before submitting</p>
+
+            <div style="background: #F3F4F6; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <div style="margin-bottom: 16px;">
+                    <strong>Category:</strong>
+                    <span id="reviewCategory" style="color: var(--text-muted); margin-left: 8px;"></span>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <strong>Title:</strong>
+                    <span id="reviewTitle" style="color: var(--text-muted); margin-left: 8px;"></span>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <strong>Description:</strong>
+                    <span id="reviewDescription" style="color: var(--text-muted); margin-left: 8px;"></span>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <strong>Location:</strong>
+                    <span id="reviewLocation" style="color: var(--text-muted); margin-left: 8px;"></span>
+                </div>
+                <div>
+                    <strong>Photo Included:</strong>
+                    <span id="reviewPhoto" style="color: var(--text-muted); margin-left: 8px;">No</span>
+                </div>
+            </div>
+
+            <div class="tips-section">
+                <h4>🎯 Submission Tips</h4>
+                <ul>
+                    <li>Be specific about the location to ensure faster resolution</li>
+                    <li>Upload clear photos taken from multiple angles if possible</li>
+                    <li>Check if a similar issue was already reported in your area</li>
+                </ul>
+            </div>
+
+            <div class="privacy-notice">
+                <strong>🔒 YOUR PRIVACY</strong><br>
+                Your personal details are only shared with the department handling your report. You can choose to remain anonymous on public dashboards
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="previousStep(5)">Back</button>
+                <button type="button" class="btn btn-primary" onclick="submitReport()">Submit Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Require authentication (any authenticated user can report)
+        document.addEventListener('DOMContentLoaded', async function() {
+            auth.requireAuth();
+            await reportsManager.init();
+        });
+
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            
+            // Show current step
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            // Update progress
+            document.getElementById('currentStep').textContent = step;
+            document.getElementById('progressFill').style.width = (step / totalSteps * 100) + '%';
+            
+            currentStep = step;
+        }
+
+        function nextStep(step, event) {
+            event.preventDefault();
+            if (step < totalSteps) {
+                showStep(step + 1);
+                if (step + 1 === 5) {
+                    updateReviewSection();
+                }
+            }
+        }
+
+        function previousStep(step) {
+            if (step > 1) {
+                showStep(step - 1);
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function useCurrentLocation() {
+            document.getElementById('reportLocation').value = '📍 Current Location (GPS)';
+        }
+
+        function captureFormData() {
+            return {
+                category: document.getElementById('reportCategory').value,
+                title: document.getElementById('reportTitle').value,
+                description: document.getElementById('reportDescription').value,
+                location: document.getElementById('reportLocation').value,
+                hasPhoto: document.getElementById('photoPreview').style.display === 'block'
+            };
+        }
+
+        function updateReviewSection() {
+            const data = captureFormData();
+            const categoryMap = {
+                water: '💧 Water & Plumbing',
+                road: '🛣️ Road & Transport',
+                light: '💡 Street Lighting',
+                waste: '♻️ Waste Management',
+                park: '🌳 Parks & Green',
+                other: '📝 Other'
+            };
+            document.getElementById('reviewCategory').textContent = categoryMap[data.category] || data.category;
+            document.getElementById('reviewTitle').textContent = data.title;
+            document.getElementById('reviewDescription').textContent = data.description;
+            document.getElementById('reviewLocation').textContent = data.location;
+            document.getElementById('reviewPhoto').textContent = data.hasPhoto ? 'Yes' : 'No';
+        }
+
+        function determinePriority(category) {
+            // Set high priority for critical infrastructure issues
+            const highPriorityCategories = ['water', 'security', 'traffic', 'health', 'electrical'];
+            return highPriorityCategories.includes(category) ? 'high' : 'medium';
+        }
+
+        function submitReport() {
+            try {
+                const ticketNumber = 'REP-' + Math.floor(Math.random() * 9000 + 1000);
+                const reportData = captureFormData();
+                const photoFile = document.getElementById('photoInput').files[0];
+            
+            // Helper: build report object and save via reportsManager
+            const saveReport = function(photoDataUrl) {
+                const report = {
+                    id: ticketNumber,
+                    timestamp: new Date().toISOString(),
+                    submittedBy: auth.getCurrentUser().email,
+                    submitterName: auth.getCurrentUser().email.split('@')[0],
+                    category: reportData.category,
+                    title: reportData.title,
+                    description: reportData.description,
+                    location: reportData.location,
+                    hasPhoto: !!photoDataUrl,
+                    photoData: photoDataUrl,
+                    status: 'submitted',
+                    priority: determinePriority(reportData.category),
+                    assignedTo: null,
+                    createdDate: new Date().toLocaleDateString(),
+                    createdTime: new Date().toLocaleTimeString()
+                };
+
+                // Save to server via reportsManager (syncs across all devices)
+                reportsManager.addReport(report);
+
+                alert('🎉 Report submitted!\n\nTicket #' + ticketNumber + '\n\nThe admin will assign it to a staff member shortly.');
+                goBack();
+            };
+            
+            // If photo exists, read it first
+            if (photoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    saveReport(e.target.result);
+                };
+                reader.onerror = function() {
+                    alert('⚠️ Error reading photo. Please try again.');
+                };
+                reader.readAsDataURL(photoFile);
+            } else {
+                saveReport(null);
+            }
+            } catch (error) {
+                console.error('Error submitting report:', error);
+                alert('⚠️ Error submitting report: ' + error.message + '\n\nPlease check your input and try again.');
+            }
+        }
+
+        // Photo upload
+        document.querySelector('.photo-upload').addEventListener('click', function() {
+            document.getElementById('photoInput').click();
+        });
+
+        document.getElementById('photoInput').addEventListener('change', function() {
+            if (this.files.length > 0) {
+                document.getElementById('photoPreview').style.display = 'block';
+                document.getElementById('reviewPhoto').textContent = 'Yes';
+            }
+        });
+    </script>
+    <script src="mobile.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
+</body>
+</html>

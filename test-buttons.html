@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Test - CitizenConnect</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        button, [role="button"] {
+            padding: 12px 24px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .btn-primary {
+            background: #023469;
+            color: white;
+        }
+        .btn-secondary {
+            background: #E3EDFB;
+            color: #023469;
+        }
+        .output {
+            background: #f9f9f9;
+            border-left: 4px solid #023469;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Button Interaction Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Basic Button Click</h2>
+        <button class="btn-primary" onclick="testClick(1)">Click Me</button>
+        <div class="output" id="output1"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Report Button (from main app)</h2>
+        <div class="btn-secondary" style="padding: 12px; display: inline-block; cursor: pointer;" onclick="testReportClick()">
+            <div style="font-size: 24px; margin-bottom: 8px;">+</div>
+            <div style="font-weight: 600;">Report an Issue</div>
+            <div style="font-size: 14px; color: #6B7280;">Help improve our community</div>
+        </div>
+        <div class="output" id="output2"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Event Listeners</h2>
+        <button class="btn-primary" id="testBtn3">Test Event Listener</button>
+        <div class="output" id="output3"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Main App Loading</h2>
+        <button class="btn-primary" onclick="checkAppElements()">Check App Elements</button>
+        <div class="output" id="output4"></div>
+    </div>
+
+    <script>
+        // Test functions
+        function testClick(num) {
+            document.getElementById(`output${num}`).innerHTML = '✅ Button clicked at ' + new Date().toLocaleTimeString();
+        }
+        
+        function testReportClick() {
+            document.getElementById('output2').innerHTML = '✅ Report button clicked at ' + new Date().toLocaleTimeString();
+        }
+        
+        // Test event listener
+        const testBtn3 = document.getElementById('testBtn3');
+        if (testBtn3) {
+            testBtn3.addEventListener('click', function() {
+                document.getElementById('output3').innerHTML = '✅ Event listener working! Clicked at ' + new Date().toLocaleTimeString();
+            });
+        }
+        
+        function checkAppElements() {
+            const report = document.querySelector('.report-btn');
+            const fab = document.querySelector('.fab');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            let output = `
+                <strong>App Elements Status:</strong><br>
+                Report button (.report-btn): ${report ? '✅ Found' : '❌ Not found'}<br>
+                FAB button (.fab): ${fab ? '✅ Found' : '❌ Not found (this is ok, it's in the main app)'}<br>
+                Nav items (.nav-item): ${navItems.length > 0 ? '✅ Found ' + navItems.length + ' items' : '❌ Not found'}<br>
+                Script loaded: ✅ Yes (this page is just for testing)
+            `;
+            document.getElementById('output4').innerHTML = output;
+        }
+        
+        // Show initial check
+        checkAppElements();
+    </script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Staff Dashboard - CitizenConnect</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#023469">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="auth.js"></script>
+    <style>
+        :root {
+            --primary: #023469;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --bg: #F3F4F6;
+            --text: #1F2937;
+            --text-light: #6B7280;
+            --border: #E5E7EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+        .container { max-width: 860px; margin: 0 auto; padding: 20px; }
+
+        /* Header */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--primary); color: white;
+            padding: 16px 24px; border-radius: 12px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(2,52,105,0.3);
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .staff-name { font-size: 0.9rem; opacity: 0.85; }
+        .logout-btn {
+            padding: 8px 16px; background: rgba(255,255,255,0.15); color: white;
+            border: 1px solid rgba(255,255,255,0.3); border-radius: 8px;
+            cursor: pointer; font-weight: 500; transition: all 0.2s;
+        }
+        .logout-btn:hover { background: rgba(255,255,255,0.25); }
+
+        /* Stats */
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card {
+            background: white; padding: 18px 20px; border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-left: 4px solid var(--primary);
+            display: flex; align-items: center; gap: 14px;
+        }
+        .stat-card.warning { border-left-color: var(--warning); }
+        .stat-card.success { border-left-color: var(--secondary); }
+        .stat-icon {
+            width: 44px; height: 44px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; background: rgba(2,52,105,0.08); color: var(--primary);
+            flex-shrink: 0;
+        }
+        .stat-card.warning .stat-icon { background: rgba(245,158,11,0.1); color: var(--warning); }
+        .stat-card.success .stat-icon { background: rgba(16,185,129,0.1); color: var(--secondary); }
+        .stat-num { font-size: 2rem; font-weight: 800; line-height: 1; }
+        .stat-label { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+
+        /* Section */
+        .section {
+            background: white; border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden;
+        }
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 22px; border-bottom: 2px solid var(--border);
+        }
+        .section-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .count-pill {
+            background: var(--primary); color: white;
+            padding: 2px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+        }
+        .section-body { padding: 18px 22px; }
+
+        /* Empty */
+        .empty { text-align: center; padding: 28px; color: var(--text-light); }
+        .empty i { font-size: 2.2rem; margin-bottom: 10px; display: block; opacity: 0.35; }
+
+        /* Task card */
+        .task-card {
+            border: 1px solid var(--border); border-radius: 10px;
+            margin-bottom: 14px; overflow: hidden;
+        }
+        .task-card:last-child { margin-bottom: 0; }
+
+        .task-card.status-assigned     { border-left: 4px solid var(--warning); }
+        .task-card.status-in_progress  { border-left: 4px solid var(--primary); }
+        .task-card.status-pending_approval { border-left: 4px solid #EC4899; }
+        .task-card.status-resolved     { border-left: 4px solid var(--secondary); }
+
+        .task-top { padding: 14px 16px; }
+        .task-cat {
+            display: inline-block; padding: 2px 10px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 600; background: #E0E7FF; color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .task-title { font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+        .task-meta { font-size: 0.82rem; color: var(--text-light); display: flex; flex-wrap: wrap; gap: 12px; }
+        .task-meta span { display: flex; align-items: center; gap: 4px; }
+
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;
+            margin-top: 8px;
+        }
+        .status-assigned     { background: #FEF3C7; color: #92400E; }
+        .status-in_progress  { background: #EDE9FE; color: #5B21B6; }
+        .status-pending_approval { background: #FCE7F3; color: #9D174D; }
+        .status-resolved     { background: #D1FAE5; color: #065F46; }
+
+        /* Rejection notice */
+        .rejection-notice {
+            margin: 0 16px 14px;
+            padding: 12px 14px;
+            background: #FEF2F2; border-left: 4px solid var(--danger);
+            border-radius: 6px; font-size: 0.88rem; color: #7F1D1D;
+        }
+        .rejection-notice strong { display: block; margin-bottom: 4px; }
+
+        /* Pending notice */
+        .pending-notice {
+            margin: 0 16px 14px;
+            padding: 12px 14px;
+            background: #FFF7ED; border-left: 4px solid var(--warning);
+            border-radius: 6px; font-size: 0.88rem; color: #92400E;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Complete form (inline) */
+        .complete-form {
+            display: none; padding: 16px; border-top: 1px solid var(--border);
+            background: #F8FAFF;
+        }
+        .complete-form.open { display: block; }
+        .complete-form label { font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 8px; }
+        .complete-form textarea {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+            border-radius: 8px; font-family: inherit; font-size: 0.9rem;
+            min-height: 90px; resize: vertical;
+        }
+        .complete-form textarea:focus { outline: none; border-color: var(--primary); }
+        .form-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+        /* Buttons */
+        .btn {
+            padding: 9px 16px; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;
+        }
+        .btn-complete { background: var(--secondary); color: white; }
+        .btn-complete:hover { background: #059669; }
+        .btn-submit   { background: var(--primary); color: white; }
+        .btn-submit:hover { background: #012550; }
+        .btn-cancel   { background: var(--bg); color: var(--text-light); border: 1px solid var(--border); }
+        .btn-cancel:hover { background: var(--border); }
+
+        /* Photo */
+        .task-photo { width: 100%; max-height: 220px; object-fit: cover; border-radius: 6px; margin-top: 10px; }
+
+        /* Resolved history */
+        .history-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem;
+        }
+        .history-row:last-child { border-bottom: none; }
+        .history-title { font-weight: 600; }
+        .history-meta { color: var(--text-light); font-size: 0.8rem; margin-top: 2px; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .stats-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .stat-icon { display: none; }
+            .stat-num { font-size: 1.5rem; }
+            .stat-label { font-size: 0.72rem; }
+            .container { padding: 10px; }
+            .header { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
+            .staff-name { display: none; }
+            .section-body { padding: 12px; }
+            .section-header h2 { font-size: 0.92rem; }
+            .task-top { padding: 12px; }
+            .task-title { font-size: 0.95rem; }
+            .form-actions { flex-direction: column; }
+            .form-actions .btn { width: 100%; justify-content: center; }
+            .complete-form { padding: 12px; }
+            .history-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+            /* Prevent iOS zoom */
+            textarea, input, select { font-size: 16px !important; }
+        }
+
+        /* Desktop */
+        @media (min-width: 769px) {
+            body { background: #E8EDF5; }
+            .container { max-width: 900px; padding: 30px 24px; }
+            .task-photo { max-height: 300px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fa-solid fa-user-gear"></i>
+            CitizenConnect — Staff
+        </div>
+        <div class="header-right">
+            <span class="staff-name" id="staffName"></span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card warning">
+            <div class="stat-icon"><i class="fa-solid fa-inbox"></i></div>
+            <div>
+                <div class="stat-num" id="statAssigned">0</div>
+                <div class="stat-label">Assigned to me</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div>
+                <div class="stat-num" id="statPending">0</div>
+                <div class="stat-label">Awaiting approval</div>
+            </div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+                <div class="stat-num" id="statDone">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Active Tasks -->
+    <div class="section">
+        <div class="section-header">
+            <h2><i class="fa-solid fa-list-check" style="color:var(--warning)"></i> My Assigned Tasks</h2>
+            <span class="count-pill" id="activePill">0</span>
+        </div>
+        <div class="section-body">
+            <div id="activeTasks"></div>
+        </div>
+    </div>
+
+    <!-- Completed / History -->
+    <div class="section">
+        <div class="section-header">
+            <h2><i class="fa-solid fa-check-double" style="color:var(--secondary)"></i> Completed Tasks</h2>
+            <span class="count-pill" id="historyPill">0</span>
+        </div>
+        <div class="section-body">
+            <div id="historyTasks"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="auth.js"></script>
+<script src="reports.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        auth.requireRole('staff');
+        const user = auth.getCurrentUser();
+        if (user) document.getElementById('staffName').textContent = user.email;
+        await reportsManager.init();
+        render();
+    });
+
+    function render() {
+        const user = auth.getCurrentUser();
+        if (!user) return;
+
+        const all = reportsManager.getAllReports();
+        const mine = all.filter(r => r.assignedTo === user.email);
+
+        // Active = not yet resolved/closed
+        const active   = mine.filter(r => !['resolved','closed'].includes(r.status));
+        const done     = mine.filter(r =>  ['resolved','closed'].includes(r.status));
+        const pending  = mine.filter(r => r.status === 'pending_approval');
+        const assigned = mine.filter(r => ['assigned','in_progress'].includes(r.status));
+
+        // Stats
+        document.getElementById('statAssigned').textContent = assigned.length;
+        document.getElementById('statPending').textContent  = pending.length;
+        document.getElementById('statDone').textContent     = done.length;
+        document.getElementById('activePill').textContent   = active.length;
+        document.getElementById('historyPill').textContent  = done.length;
+
+        renderActive(active);
+        renderHistory(done);
+    }
+
+    // ── Active Tasks ──────────────────────────────────────────────────────────
+    function renderActive(tasks) {
+        const el = document.getElementById('activeTasks');
+
+        if (tasks.length === 0) {
+            el.innerHTML = `<div class="empty"><i class="fa-solid fa-mug-hot"></i>No active tasks — you're all clear!</div>`;
+            return;
+        }
+
+        el.innerHTML = tasks.map(r => {
+            const cat = getCategoryInfo(r.category);
+            const isPendingApproval = r.status === 'pending_approval';
+            const isRejected = r.status === 'in_progress' && r.rejectionReason;
+
+            return `
+            <div class="task-card status-${r.status}" id="tcard-${r.id}">
+                <div class="task-top">
+                    <span class="task-cat">${cat.icon} ${cat.name}</span>
+                    <div class="task-title">${r.title}</div>
+                    <div class="task-meta">
+                        <span><i class="fa-solid fa-location-dot"></i>${r.location}</span>
+                        <span><i class="fa-solid fa-user"></i>${r.submitterName || 'User'}</span>
+                        <span><i class="fa-regular fa-calendar"></i>${r.assignedDate || ''}</span>
+                    </div>
+                    ${r.description ? `<div style="margin-top:10px;font-size:0.88rem;color:var(--text-light);line-height:1.5">${r.description}</div>` : ''}
+                    ${r.photoData ? `<img src="${r.photoData}" class="task-photo" alt="Issue photo">` : ''}
+
+                    <div style="margin-top:10px">
+                        <span class="status-badge status-${r.status}">${statusLabel(r.status)}</span>
+                    </div>
+
+                    ${!isPendingApproval ? `
+                    <div style="margin-top:12px">
+                        <button class="btn btn-complete" onclick="openCompleteForm('${r.id}')">
+                            <i class="fa-solid fa-circle-check"></i> Mark as Completed
+                        </button>
+                    </div>` : ''}
+                </div>
+
+                ${isRejected ? `
+                <div class="rejection-notice">
+                    <strong><i class="fa-solid fa-triangle-exclamation"></i> Admin rejected — please correct and resubmit:</strong>
+                    ${escHtml(r.rejectionReason)}
+                </div>` : ''}
+
+                ${isPendingApproval ? `
+                <div class="pending-notice">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                    <span>Sent to admin for approval — waiting for review.</span>
+                </div>` : ''}
+
+                <!-- Inline complete form -->
+                <div class="complete-form" id="form-${r.id}">
+                    <label>Describe what you did to resolve this issue: <span style="color:var(--danger)">*</span></label>
+                    <textarea id="notes-${r.id}" placeholder="e.g. Filled the pothole with asphalt, marked area with cones..."></textarea>
+                    <div class="form-actions">
+                        <button class="btn btn-submit" onclick="submitComplete('${r.id}')">
+                            <i class="fa-solid fa-paper-plane"></i> Send to Admin for Approval
+                        </button>
+                        <button class="btn btn-cancel" onclick="closeCompleteForm('${r.id}')">Cancel</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function openCompleteForm(id) {
+        // Close any other open forms first
+        document.querySelectorAll('.complete-form.open').forEach(f => f.classList.remove('open'));
+        document.getElementById('form-' + id).classList.add('open');
+        setTimeout(() => document.getElementById('notes-' + id).focus(), 50);
+    }
+
+    function closeCompleteForm(id) {
+        document.getElementById('form-' + id).classList.remove('open');
+    }
+
+    function submitComplete(id) {
+        const notes = document.getElementById('notes-' + id).value.trim();
+        const textarea = document.getElementById('notes-' + id);
+        if (!notes) {
+            textarea.style.border = '2px solid var(--danger)';
+            textarea.placeholder = 'Please describe what you did before submitting.';
+            return;
+        }
+        const user = auth.getCurrentUser();
+        reportsManager.submitResolution(id, user.email, notes);
+        showToast('Sent to admin for approval!');
+        render();
+    }
+
+    // ── History ───────────────────────────────────────────────────────────────
+    function renderHistory(tasks) {
+        const el = document.getElementById('historyTasks');
+        if (tasks.length === 0) {
+            el.innerHTML = `<div class="empty"><i class="fa-solid fa-box-open"></i>No completed tasks yet.</div>`;
+            return;
+        }
+        el.innerHTML = tasks.map(r => {
+            const cat = getCategoryInfo(r.category);
+            return `
+            <div class="history-row">
+                <div>
+                    <div class="history-title">${cat.icon} ${r.title}</div>
+                    <div class="history-meta"><i class="fa-solid fa-location-dot"></i> ${r.location} &nbsp;·&nbsp; Approved: ${r.approvedDate || r.resolvedDate || '—'}</div>
+                </div>
+                <span class="status-badge status-resolved">✅ Resolved</span>
+            </div>`;
+        }).join('');
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    function statusLabel(status) {
+        return {
+            assigned:         '📋 Assigned — tap to start',
+            in_progress:      '🔧 In Progress',
+            pending_approval: '⏳ Waiting for Admin Approval',
+            resolved:         '✅ Resolved',
+            closed:           '🔒 Closed'
+        }[status] || status;
+    }
+
+    function escHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function showToast(msg) {
+        const t = document.createElement('div');
+        t.textContent = msg;
+        Object.assign(t.style, {
+            position:'fixed', bottom:'24px', left:'50%', transform:'translateX(-50%)',
+            background:'#1F2937', color:'white', padding:'12px 24px',
+            borderRadius:'8px', fontWeight:'600', fontSize:'0.9rem',
+            boxShadow:'0 4px 16px rgba(0,0,0,0.2)', zIndex:'9999', transition:'opacity 0.3s'
+        });
+        document.body.appendChild(t);
+        setTimeout(() => { t.style.opacity='0'; setTimeout(() => t.remove(), 300); }, 2500);
+    }
+
+    function logout() {
+        if (confirm('Logout?')) auth.logout();
+    }
+</script>
+<script src="mobile.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>

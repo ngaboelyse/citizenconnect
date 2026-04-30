@@ -1,0 +1,38 @@
+# OS Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node (if using npm)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build
+dist/
+build/
+*.log
+
+# Environment
+.env
+.env.local
+
+# Android/iOS (not needed for web hosting)
+android/
+ios/
+app/
+
+# Data files (Railway uses a persistent volume instead)
+data/
+
+# Capacitor/build artifacts
+*.tmp
+capacitor.config.json

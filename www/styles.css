@@ -1,0 +1,1188 @@
+:root {
+    --bg-color: #F8F9FB;
+    /* Safe area insets for notch / dynamic island / home indicator */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --paper: #FFFFFF;
+    --primary: #023469; /* Deep blue used for hero section */
+    --primary-dark: #00224A; /* Used for buttons */
+    --text-main: #1C1F23;
+    --text-muted: #6B7280;
+    --text-light: #9CA3AF;
+    --border-color: #E5E7EB;
+    
+    --blue-text: #195EC9;
+    --blue-bg: #E3EDFB;
+    
+    --green-text: #158F49;
+    --green-bg: #D7F6E7;
+    
+    --gray-badge-text: #4B5563;
+    --gray-badge-bg: #F3F4F6;
+    
+    --orange-icon: #EE8F17;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    color: var(--text-main);
+}
+
+.app-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-bottom: calc(80px + var(--safe-bottom)); /* Room for bottom nav + home indicator */
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    padding-top: calc(12px + var(--safe-top));
+    padding-left: calc(16px + var(--safe-left));
+    padding-right: calc(16px + var(--safe-right));
+    background-color: var(--bg-color);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--primary);
+}
+
+.logo i {
+    font-size: 1.2rem;
+    transform: rotate(-15deg);
+}
+
+.logo h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.notification-icon {
+    position: relative;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.notification-icon .badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background-color: #EF4444;
+    border-radius: 50%;
+    border: 2px solid var(--bg-color);
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    background-color: var(--primary-dark);
+    color: white;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Main Content */
+.main-content {
+    padding: 0 8px;
+}
+
+/* Hero Section */
+.hero {
+    background-color: var(--primary);
+    border-radius: 8px;
+    padding: 16px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin: 8px 0;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 65%;
+}
+
+.hero h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    font-size: 0.85rem;
+    color: #D1E0F3;
+    line-height: 1.4;
+}
+
+/* Silhouette buildings in background of hero */
+.hero-bg-buildings {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 40%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.15;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.building {
+    background-color: white;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+.b1 { width: 25px; height: 60%; margin-right: 4px; }
+.b2 { width: 35px; height: 85%; margin-right: 4px; position: relative;}
+.b2::before { /* Windows setup */
+    content: ''; position: absolute; top:10px; left:5px; width:6px; height:6px; background:var(--primary); box-shadow: 12px 0 0 var(--primary), 0 15px 0 var(--primary), 12px 15px 0 var(--primary), 0 30px 0 var(--primary), 12px 30px 0 var(--primary), 0 45px 0 var(--primary), 12px 45px 0 var(--primary);
+}
+.b3 { width: 20px; height: 50%; margin-right: 4px; }
+.b4 { width: 30px; height: 70%; margin-right: -10px;}
+
+/* Stats Container */
+.stats-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.stat-card {
+    flex: 1;
+    background: var(--paper);
+    padding: 12px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-icon {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.icon-blue { color: var(--blue-text); }
+.icon-green { color: var(--green-text); }
+.icon-orange { color: var(--orange-icon); }
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.text-blue { color: var(--primary); }
+.text-green { color: var(--primary); }
+
+/* Action Area */
+.action-area {
+    margin: 8px 0;
+}
+
+.report-btn {
+    width: 100%;
+    background-color: var(--blue-bg);
+    border: 1px dashed #A5C5EF;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.report-btn:hover {
+    background-color: #D3E4F9;
+}
+
+.report-btn .btn-icon {
+    width: 36px;
+    height: 36px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.report-btn h3 {
+    color: var(--primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.report-btn p {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* Recent Activity */
+.recent-activity {
+    margin-bottom: 12px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.section-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.view-history {
+    font-size: 0.8rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.view-history i {
+    font-size: 0.7rem;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.activity-card {
+    background: var(--paper);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    gap: 12px;
+}
+
+.activity-icon-container {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.bg-light-blue { background-color: var(--blue-bg); }
+.bg-light-gray { background-color: var(--gray-badge-bg); }
+
+.activity-details {
+    flex-grow: 1;
+}
+
+.activity-details h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.id-tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.location {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-blue {
+    background-color: var(--blue-bg);
+    color: var(--blue-text);
+}
+
+.badge-gray {
+    background-color: var(--gray-badge-bg);
+    color: var(--gray-badge-text);
+}
+
+.badge-green {
+    background-color: var(--green-bg);
+    color: var(--green-text);
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.dot-blue { background-color: var(--blue-text); }
+.dot-gray { background-color: var(--gray-badge-text); }
+.dot-green { background-color: var(--green-text); }
+
+.time {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+/* Live Map */
+.map-card {
+    background: var(--paper);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.map-header {
+    padding: 12px;
+}
+
+.map-header h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.map-header p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.map-view {
+    height: 140px;
+    background-color: #1A273A; /* Fallback for map */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 12px;
+}
+
+.interactive-map-btn {
+    background: var(--paper);
+    color: var(--primary);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+/* Floating Action Button (FAB) */
+.fab {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    background-color: var(--primary-dark);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(2, 52, 105, 0.4);
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s;
+}
+
+.fab:hover {
+    transform: scale(1.05);
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--paper);
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    padding-bottom: calc(10px + var(--safe-bottom));
+    padding-left: calc(20px + var(--safe-left));
+    padding-right: calc(20px + var(--safe-right));
+    border-top: 1px solid var(--border-color);
+    z-index: 20;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.nav-item i {
+    font-size: 1.2rem;
+}
+
+.nav-item.active {
+    color: var(--blue-text);
+}
+
+/* Enhanced Button Interactions */
+button, 
+[role="button"],
+.nav-item,
+.activity-card,
+.stat-card {
+    transition: all 0.2s ease;
+}
+
+button:hover:not(:disabled),
+[role="button"]:hover,
+.activity-card:hover {
+    opacity: 0.9;
+}
+
+button:active:not(:disabled),
+[role="button"]:active {
+    transform: scale(0.98);
+}
+
+.nav-item:hover {
+    opacity: 0.8;
+}
+
+/* Activity cards clickable styling */
+.activity-card {
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.activity-card:hover {
+    background-color: rgba(3, 52, 105, 0.02);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Stat cards clickable */
+.stat-card {
+    cursor: pointer;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Notification icon hover */
+.notification-icon:hover,
+.avatar:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+/* Report button active state */
+.report-btn:active {
+    transform: scale(0.98);
+}
+
+/* FAB active state */
+.fab:active {
+    transform: scale(0.95);
+}
+
+/* Interactive map button */
+.interactive-map-btn:hover {
+    background-color: rgba(2, 52, 105, 0.9);
+    transform: translateY(-2px);
+}
+
+/* ===== PHASE 3: MOBILE OPTIMIZATION ===== */
+
+/* Ensure touch targets are at least 44x44px for better mobile UX */
+button, 
+.nav-item,
+.activity-card,
+.fab,
+.back-btn,
+.logout-btn {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Improve spacing for touch */
+@media (max-width: 768px) {
+    .app-container {
+        padding-bottom: 80px;
+    }
+
+    .header {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .logo h1 {
+        font-size: 1rem;
+    }
+
+    .bottom-nav {
+        padding: 8px 12px;
+    }
+
+    .nav-item {
+        gap: 4px;
+        font-size: 0.65rem;
+    }
+
+    .nav-item i {
+        font-size: 1rem;
+    }
+
+    .hero {
+        padding: 20px 12px;
+        min-height: 200px;
+    }
+
+    .hero-bg-buildings {
+        display: none;
+    }
+
+    .hero-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
+    }
+
+    .stats-container {
+        gap: 12px;
+        padding: 0 12px;
+    }
+
+    .stat-card {
+        padding: 16px 12px;
+        gap: 12px;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .action-area {
+        padding: 12px;
+    }
+
+    .report-btn {
+        padding: 16px 12px;
+    }
+
+    .report-btn h3 {
+        font-size: 1rem;
+    }
+
+    .report-btn p {
+        font-size: 0.85rem;
+    }
+
+    .btn-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+
+    .recent-activity {
+        padding: 12px;
+    }
+
+    .section-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .activity-card {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .activity-icon-container {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .activity-details h4 {
+        font-size: 0.95rem;
+    }
+
+    .location {
+        font-size: 0.8rem;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+
+    .live-map {
+        padding: 12px;
+    }
+
+    .map-card {
+        margin-bottom: 12px;
+    }
+
+    .map-header {
+        padding: 12px;
+    }
+
+    .map-header h4 {
+        font-size: 0.95rem;
+    }
+
+    .map-view {
+        height: 120px;
+    }
+
+    .fab {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+        bottom: 85px;
+        right: 12px;
+    }
+
+    .interactive-map-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    main {
+        padding: 0;
+    }
+
+    /* Ensure text input fields are at least 44px tall */
+    input,
+    textarea,
+    select,
+    button {
+        font-size: 16px; /* Prevents zoom on iOS */
+        min-height: 44px;
+    }
+
+    textarea {
+        min-height: 100px;
+        padding: 12px;
+    }
+
+    /* Improve form spacing */
+    .form-section input,
+    .form-section select,
+    .form-section textarea {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    /* Better table display */
+    table {
+        font-size: 0.85rem;
+    }
+
+    table td,
+    table th {
+        padding: 8px 4px;
+    }
+}
+
+/* ===== DESKTOP / WIDE SCREEN ===== */
+@media (min-width: 769px) {
+    body {
+        background: #E8EDF5;
+    }
+
+    .app-container {
+        max-width: 480px;
+        width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        box-shadow: 0 0 40px rgba(0,0,0,0.15);
+        background: var(--bg-color);
+        position: relative;
+        padding-bottom: calc(80px + var(--safe-bottom));
+    }
+
+    .bottom-nav {
+        max-width: 480px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .fab {
+        right: calc(50% - 240px + 20px);
+    }
+
+    .hero {
+        border-radius: 12px;
+    }
+
+    .hero h2 {
+        font-size: 2rem;
+    }
+
+    .stats-container {
+        padding: 0;
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 16px;
+    }
+
+    .main-content {
+        padding: 0 12px;
+    }
+}
+
+    /* Notification panel mobile friendly */
+    .notifications-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        width: 100%;
+        max-height: 80vh;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .notifications-panel .close-btn {
+        top: 12px;
+    }
+
+    /* Better overflow handling */
+    .section {
+        margin: 0;
+        border-radius: 0;
+        border-bottom: 1px solid #E5E7EB;
+    }
+
+    .section:last-child {
+        border-bottom: none;
+    }
+
+    /* Ensure FAB doesn't overlap content */
+    main {
+        padding-bottom: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-container {
+        padding-bottom: 80px;
+    }
+
+    .header {
+        padding: 8px;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        gap: 6px;
+    }
+
+    .logo i {
+        font-size: 1rem;
+    }
+
+    .logo h1 {
+        font-size: 0.95rem;
+    }
+
+    .header-actions {
+        gap: 12px;
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .hero {
+        padding: 12px;
+        min-height: 150px;
+    }
+
+    .hero-content h2 {
+        font-size: 1.2rem;
+        line-height: 1.3;
+    }
+
+    .hero-content p {
+        font-size: 0.85rem;
+    }
+
+    .stats-container {
+        gap: 8px;
+        padding: 0 8px;
+    }
+
+    .stat-card {
+        padding: 12px 8px;
+        gap: 8px;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        text-align: left;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+        text-align: left;
+    }
+
+    .action-area {
+        padding: 8px;
+        margin: 8px 0;
+    }
+
+    .report-btn {
+        padding: 12px 8px;
+        gap: 12px;
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+    }
+
+    .report-btn h3 {
+        font-size: 0.95rem;
+    }
+
+    .report-btn p {
+        font-size: 0.8rem;
+        display: none;
+    }
+
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .recent-activity {
+        padding: 8px;
+    }
+
+    .section-header {
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .section-header h2 {
+        font-size: 1rem;
+    }
+
+    .view-history {
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .activity-card {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .activity-icon-container {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .activity-details h4 {
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+    }
+
+    .id-tag {
+        font-size: 0.75rem;
+    }
+
+    .location {
+        font-size: 0.75rem;
+        margin: 2px 0;
+    }
+
+    .status-row {
+        gap: 6px;
+        margin-top: 4px;
+    }
+
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+
+    .time {
+        font-size: 0.7rem;
+    }
+
+    .live-map {
+        padding: 8px;
+    }
+
+    .map-card {
+        margin-bottom: 8px;
+    }
+
+    .map-header {
+        padding: 8px;
+    }
+
+    .map-header h4 {
+        font-size: 0.9rem;
+    }
+
+    .map-header p {
+        display: none;
+    }
+
+    .map-view {
+        height: 100px;
+    }
+
+    .fab {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+        bottom: 80px;
+        right: 8px;
+    }
+
+    .interactive-map-btn {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+
+    .interactive-map-btn i {
+        display: none;
+    }
+
+    /* Tight spacing for forms */
+    input,
+    textarea,
+    select,
+    button {
+        border-radius: 6px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    /* Better button layout */
+    .button-group {
+        gap: 8px;
+    }
+
+    .btn {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+    }
+
+    /* Hide element if needed */
+    .show-desktop {
+        display: none;
+    }
+
+    /* Bottom nav spacing */
+    .bottom-nav {
+        padding: 6px 8px;
+        gap: 8px;
+    }
+
+    .nav-item {
+        gap: 2px;
+        font-size: 0.6rem;
+        flex: 1;
+        text-align: center;
+    }
+
+    .nav-item i {
+        font-size: 0.9rem;
+    }
+
+    /* Reduce excessive padding */
+    .main-content {
+        padding: 0;
+    }
+
+    section {
+        margin-bottom: 8px;
+    }
+}
+
+/* High DPI / Desktop touch devices */
+@media (hover: none) and (pointer: coarse) {
+    button,
+    .nav-item,
+    .activity-card,
+    a {
+        padding: 12px;
+        min-height: 48px;
+    }
+
+    button:hover:not(:disabled),
+    [role="button"]:hover {
+        opacity: 1;
+    }
+}
+
+/* Landscape orientation optimizations */
+@media (orientation: landscape) and (max-width: 900px) {
+    .app-container {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .hero {
+        min-height: 120px;
+        padding: 12px;
+    }
+
+    .hero-content h2 {
+        font-size: 1.3rem;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        max-height: 100px;
+    }
+
+    .app-container {
+        padding-bottom: 100px;
+    }
+}
+

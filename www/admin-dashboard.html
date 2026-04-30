@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Admin Dashboard - CitizenConnect</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#023469">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="auth.js"></script>
+    <style>
+        :root {
+            --primary: #023469;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #8B5CF6;
+            --bg: #F3F4F6;
+            --text: #1F2937;
+            --text-light: #6B7280;
+            --border: #E5E7EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        @media (min-width: 769px) {
+            body { background: #E8EDF5; }
+            .container { padding: 28px 24px; }
+        }
+
+        /* Header */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--primary); color: white;
+            padding: 16px 24px; border-radius: 12px; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(2,52,105,0.3);
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .admin-name { font-size: 0.9rem; opacity: 0.85; }
+        .logout-btn {
+            padding: 8px 16px; background: rgba(255,255,255,0.15); color: white;
+            border: 1px solid rgba(255,255,255,0.3); border-radius: 8px;
+            cursor: pointer; font-weight: 500; transition: all 0.2s;
+        }
+        .logout-btn:hover { background: rgba(255,255,255,0.25); }
+
+        /* KPI row */
+        .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+        .kpi-card {
+            background: white; padding: 20px; border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-top: 4px solid var(--primary);
+        }
+        .kpi-card.danger  { border-top-color: var(--danger); }
+        .kpi-card.warning { border-top-color: var(--warning); }
+        .kpi-card.success { border-top-color: var(--secondary); }
+        .kpi-label { font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .kpi-value { font-size: 2.2rem; font-weight: 800; color: var(--text); }
+        .kpi-sub { font-size: 0.8rem; color: var(--text-light); margin-top: 4px; }
+
+        /* Section */
+        .section {
+            background: white; border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 24px; overflow: hidden;
+        }
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 24px; border-bottom: 2px solid var(--border);
+        }
+        .section-header h2 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .count-badge {
+            background: var(--primary); color: white;
+            padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+        }
+        .count-badge.warning { background: var(--warning); }
+        .count-badge.danger  { background: var(--danger); }
+        .section-body { padding: 20px 24px; }
+
+        /* Empty state */
+        .empty { text-align: center; padding: 32px; color: var(--text-light); }
+        .empty i { font-size: 2.5rem; margin-bottom: 10px; display: block; opacity: 0.4; }
+
+        /* Report card */
+        .report-card {
+            border: 1px solid var(--border); border-radius: 10px;
+            margin-bottom: 14px; overflow: hidden;
+        }
+        .report-card:last-child { margin-bottom: 0; }
+        .report-top {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 14px 16px; gap: 12px;
+        }
+        .report-info { flex: 1; min-width: 0; }
+        .report-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+        .report-meta { font-size: 0.82rem; color: var(--text-light); display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+        .report-meta span { display: flex; align-items: center; gap: 4px; }
+        .cat-badge {
+            display: inline-block; padding: 2px 10px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 600; background: #E0E7FF; color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;
+        }
+        .status-submitted    { background: #DBEAFE; color: #1D4ED8; }
+        .status-assigned     { background: #FEF3C7; color: #92400E; }
+        .status-in_progress  { background: #EDE9FE; color: #5B21B6; }
+        .status-pending_approval { background: #FCE7F3; color: #9D174D; }
+        .status-resolved     { background: #D1FAE5; color: #065F46; }
+
+        /* Resolution box shown on pending cards */
+        .resolution-box {
+            margin: 0 16px 14px;
+            padding: 12px 14px;
+            background: #F0FDF4; border-left: 4px solid var(--secondary);
+            border-radius: 6px; font-size: 0.88rem;
+        }
+        .resolution-box strong { display: block; margin-bottom: 4px; color: #065F46; }
+
+        /* Rejection box shown when staff is re-working */
+        .rejection-box {
+            margin: 0 16px 14px;
+            padding: 12px 14px;
+            background: #FEF2F2; border-left: 4px solid var(--danger);
+            border-radius: 6px; font-size: 0.88rem; color: #7F1D1D;
+        }
+        .rejection-box strong { display: block; margin-bottom: 4px; }
+
+        /* Action buttons */
+        .report-actions { display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap; align-items: flex-start; }
+        .btn {
+            padding: 8px 14px; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;
+        }
+        .btn-assign  { background: var(--primary); color: white; }
+        .btn-assign:hover  { background: #012550; }
+        .btn-approve { background: var(--secondary); color: white; }
+        .btn-approve:hover { background: #059669; }
+        .btn-reject  { background: var(--danger); color: white; }
+        .btn-reject:hover  { background: #DC2626; }
+        .btn-detail  { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+        .btn-detail:hover  { border-color: var(--primary); color: var(--primary); }
+
+        /* Assign panel (inline dropdown) */
+        .assign-panel {
+            display: none; padding: 14px 16px; border-top: 1px solid var(--border);
+            background: #F8FAFF;
+        }
+        .assign-panel.open { display: block; }
+        .assign-panel label { font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 8px; }
+        .assign-panel select {
+            width: 100%; padding: 10px; border: 1px solid var(--border);
+            border-radius: 8px; font-family: inherit; font-size: 0.9rem; margin-bottom: 10px;
+        }
+        .assign-panel .panel-actions { display: flex; gap: 8px; }
+        .btn-confirm { background: var(--primary); color: white; }
+        .btn-confirm:hover { background: #012550; }
+        .btn-cancel-sm { background: white; color: var(--text-light); border: 1px solid var(--border); }
+
+        /* All reports table */
+        .reports-table { width: 100%; border-collapse: collapse; }
+        .reports-table th {
+            text-align: left; padding: 10px 12px;
+            font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.4px; color: var(--text-light);
+            border-bottom: 2px solid var(--border);
+        }
+        .reports-table td {
+            padding: 12px; border-bottom: 1px solid var(--border);
+            font-size: 0.88rem; vertical-align: middle;
+        }
+        .reports-table tr:last-child td { border-bottom: none; }
+        .reports-table tr:hover td { background: #F9FAFB; }
+
+        /* Modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5); z-index: 1000;
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: white; border-radius: 16px; padding: 28px;
+            max-width: 540px; width: 100%; max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal h3 { font-size: 1.2rem; margin-bottom: 6px; }
+        .modal .modal-sub { color: var(--text-light); font-size: 0.88rem; margin-bottom: 20px; }
+        .modal label { font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px; margin-top: 16px; }
+        .modal textarea {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+            border-radius: 8px; font-family: inherit; font-size: 0.9rem;
+            min-height: 90px; resize: vertical;
+        }
+        .modal textarea:focus { outline: none; border-color: var(--primary); }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+        .btn-cancel { background: var(--bg); color: var(--text); }
+        .btn-cancel:hover { background: var(--border); }
+
+        /* Detail modal */
+        .detail-row { display: flex; gap: 8px; margin-bottom: 10px; font-size: 0.9rem; }
+        .detail-label { font-weight: 600; min-width: 110px; color: var(--text-light); }
+        .detail-value { color: var(--text); flex: 1; }
+        .detail-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .report-top { flex-direction: column; }
+            .report-actions { width: 100%; flex-wrap: wrap; }
+            .report-actions .btn { flex: 1; justify-content: center; min-width: 120px; }
+            .modal { padding: 20px 16px; }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            .kpi-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .kpi-value { font-size: 1.8rem; }
+            .kpi-sub { display: none; }
+            .section-body { padding: 12px; }
+            .header { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
+            .admin-name { display: none; }
+
+            /* Table → Cards on mobile */
+            .reports-table thead { display: none; }
+            .reports-table, .reports-table tbody { display: block; }
+            .reports-table tr {
+                display: block;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                margin-bottom: 12px;
+                overflow: hidden;
+                background: white;
+            }
+            .reports-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 14px;
+                border-bottom: 1px solid var(--border);
+                font-size: 0.85rem;
+                gap: 8px;
+            }
+            .reports-table td:last-child { border-bottom: none; }
+            .reports-table td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                font-size: 0.72rem;
+                text-transform: uppercase;
+                letter-spacing: 0.4px;
+                color: var(--text-light);
+                flex-shrink: 0;
+                min-width: 70px;
+            }
+            .resolution-box, .rejection-box { margin: 0 10px 12px; }
+            .section-header h2 { font-size: 0.92rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fa-solid fa-bullhorn"></i>
+            CitizenConnect — Admin
+        </div>
+        <div class="header-right">
+            <span class="admin-name" id="adminName"></span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <div class="kpi-label">Total Reports</div>
+            <div class="kpi-value" id="kpiTotal">0</div>
+            <div class="kpi-sub">All time</div>
+        </div>
+        <div class="kpi-card danger">
+            <div class="kpi-label">Awaiting Assignment</div>
+            <div class="kpi-value" id="kpiNew">0</div>
+            <div class="kpi-sub">Need staff assigned</div>
+        </div>
+        <div class="kpi-card warning">
+            <div class="kpi-label">Pending Approval</div>
+            <div class="kpi-value" id="kpiPending">0</div>
+            <div class="kpi-sub">Staff submitted for review</div>
+        </div>
+        <div class="kpi-card success">
+            <div class="kpi-label">Resolved</div>
+            <div class="kpi-value" id="kpiResolved">0</div>
+            <div class="kpi-sub">Approved &amp; closed</div>
+        </div>
+    </div>
+
+    <!-- SECTION 1: Pending Approval -->
+    <div class="section">
+        <div class="section-header">
+            <h2><i class="fa-solid fa-hourglass-half" style="color:var(--warning)"></i> Pending Approval — Review Staff Work</h2>
+            <span class="count-badge warning" id="pendingBadge">0</span>
+        </div>
+        <div class="section-body">
+            <div id="pendingReports"></div>
+        </div>
+    </div>
+
+    <!-- SECTION 2: All Reports with Assign -->
+    <div class="section">
+        <div class="section-header">
+            <h2><i class="fa-solid fa-list-check" style="color:var(--primary)"></i> All Reports</h2>
+            <span class="count-badge" id="allBadge">0</span>
+        </div>
+        <div class="section-body" style="padding: 0 0 4px 0; overflow-x: auto;">
+            <table class="reports-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="allReportsBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div><!-- /container -->
+
+<!-- ── Assign Modal ────────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="assignModal">
+    <div class="modal">
+        <h3><i class="fa-solid fa-user-plus" style="color:var(--primary)"></i> Assign Task to Staff</h3>
+        <p class="modal-sub" id="assignModalSub"></p>
+        <label>Select staff member:</label>
+        <select id="assignStaffSelect" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.95rem;margin-top:6px">
+        </select>
+        <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="closeAssignModal()">Cancel</button>
+            <button class="btn btn-assign" onclick="confirmAssign()">
+                <i class="fa-solid fa-check"></i> Assign Now
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Reject Modal ────────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="rejectModal">
+    <div class="modal">
+        <h3><i class="fa-solid fa-circle-xmark" style="color:var(--danger)"></i> Reject Resolution</h3>
+        <p class="modal-sub" id="rejectModalSub"></p>
+        <label>Reason for rejection <span style="color:var(--danger)">*</span></label>
+        <textarea id="rejectReason" placeholder="Describe what still needs to be done or corrected..."></textarea>
+        <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="closeRejectModal()">Cancel</button>
+            <button class="btn btn-reject" onclick="confirmReject()">
+                <i class="fa-solid fa-rotate-left"></i> Send Back to Staff
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Detail Modal ───────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="detailModal">
+    <div class="modal">
+        <h3 id="detailTitle"></h3>
+        <p class="modal-sub" id="detailId"></p>
+        <div id="detailBody"></div>
+        <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="closeDetailModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="reports.js"></script>
+<script>
+    const STAFF_LIST = [
+        { email: 'staff@example.com', name: 'Staff Member' }
+    ];
+
+    let assigningTicketId = null;
+    let rejectingTicketId = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        auth.requireRole('admin');
+        const user = auth.getCurrentUser();
+        if (user) document.getElementById('adminName').textContent = user.email;
+
+        // Populate staff dropdown
+        const sel = document.getElementById('assignStaffSelect');
+        STAFF_LIST.forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.email;
+            opt.textContent = s.name + ' (' + s.email + ')';
+            sel.appendChild(opt);
+        });
+
+        await reportsManager.init();
+        render();
+    });
+
+    function render() {
+        const all = reportsManager.getAllReports();
+
+        const pendingReports = all.filter(r => r.status === 'pending_approval');
+        const resolved       = all.filter(r => r.status === 'resolved');
+        const unassigned     = all.filter(r => !r.assignedTo || r.status === 'submitted');
+
+        document.getElementById('kpiTotal').textContent    = all.length;
+        document.getElementById('kpiNew').textContent      = unassigned.length;
+        document.getElementById('kpiPending').textContent  = pendingReports.length;
+        document.getElementById('kpiResolved').textContent = resolved.length;
+        document.getElementById('pendingBadge').textContent = pendingReports.length;
+        document.getElementById('allBadge').textContent     = all.length;
+
+        renderPendingReports(pendingReports);
+        renderAllReports(all);
+    }
+
+    // ── Assign Modal ──────────────────────────────────────────────────────────
+    function openAssignModal(id, title) {
+        assigningTicketId = id;
+        document.getElementById('assignModalSub').textContent = title;
+        document.getElementById('assignModal').classList.add('open');
+    }
+
+    function closeAssignModal() {
+        assigningTicketId = null;
+        document.getElementById('assignModal').classList.remove('open');
+    }
+
+    function confirmAssign() {
+        const staffEmail = document.getElementById('assignStaffSelect').value;
+        const staffName  = STAFF_LIST.find(s => s.email === staffEmail)?.name || staffEmail;
+        reportsManager.assignReportToStaff(assigningTicketId, staffEmail);
+        closeAssignModal();
+        showToast('Assigned to ' + staffName);
+        render();
+    }
+
+    document.getElementById('assignModal').addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeAssignModal();
+    });
+
+    // ── Pending Approval ──────────────────────────────────────────────────────
+    function renderPendingReports(reports) {
+        const el = document.getElementById('pendingReports');
+        if (reports.length === 0) {
+            el.innerHTML = `<div class="empty"><i class="fa-solid fa-hourglass"></i>No reports awaiting approval right now.</div>`;
+            return;
+        }
+        el.innerHTML = reports.map(r => {
+            const cat = getCategoryInfo(r.category);
+            return `
+            <div class="report-card" id="card-${r.id}">
+                <div class="report-top">
+                    <div class="report-info">
+                        <span class="cat-badge">${cat.icon} ${cat.name}</span>
+                        <div class="report-title">${r.title}</div>
+                        <div class="report-meta">
+                            <span><i class="fa-solid fa-location-dot"></i>${r.location}</span>
+                            <span><i class="fa-solid fa-user-gear"></i>Handled by: ${r.assignedTo || '—'}</span>
+                            <span><i class="fa-regular fa-clock"></i>Completed: ${r.resolvedDate || '—'}</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn btn-approve" onclick="approveReport('${r.id}')">
+                            <i class="fa-solid fa-circle-check"></i> Approve
+                        </button>
+                        <button class="btn btn-reject" onclick="openRejectModal('${r.id}', '${escHtml(r.title)}')">
+                            <i class="fa-solid fa-circle-xmark"></i> Reject
+                        </button>
+                        <button class="btn btn-detail" onclick="showDetail('${r.id}')">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                ${r.resolutionNotes ? `
+                <div class="resolution-box">
+                    <strong><i class="fa-solid fa-clipboard-check"></i> Staff Resolution Notes:</strong>
+                    ${escHtml(r.resolutionNotes)}
+                </div>` : ''}
+            </div>`;
+        }).join('');
+    }
+
+    function approveReport(id) {
+        const adminEmail = auth.getCurrentUser().email;
+        reportsManager.approveResolution(id, adminEmail);
+        showToast('Report approved — marked as Resolved');
+        render();
+    }
+
+    function openRejectModal(id, title) {
+        rejectingTicketId = id;
+        document.getElementById('rejectModalSub').textContent = 'Report: ' + title;
+        document.getElementById('rejectReason').value = '';
+        document.getElementById('rejectModal').classList.add('open');
+        setTimeout(() => document.getElementById('rejectReason').focus(), 50);
+    }
+
+    function closeRejectModal() {
+        rejectingTicketId = null;
+        document.getElementById('rejectModal').classList.remove('open');
+    }
+
+    function confirmReject() {
+        const reason = document.getElementById('rejectReason').value.trim();
+        if (!reason) {
+            document.getElementById('rejectReason').style.border = '2px solid var(--danger)';
+            return;
+        }
+        const adminEmail = auth.getCurrentUser().email;
+        reportsManager.rejectResolution(rejectingTicketId, adminEmail, reason);
+        closeRejectModal();
+        showToast('Rejected — sent back to staff for correction');
+        render();
+    }
+
+    // ── All Reports table ─────────────────────────────────────────────────────
+    function renderAllReports(all) {
+        const tbody = document.getElementById('allReportsBody');
+        if (all.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-light);padding:24px">No reports submitted yet.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = all.map(r => {
+            const cat = getCategoryInfo(r.category);
+            const isResolved = ['resolved','closed'].includes(r.status);
+            const assignLabel = r.assignedTo ? 'Reassign' : 'Assign';
+            const actionBtn = !isResolved
+                ? `<button class="btn btn-assign" style="padding:6px 12px;font-size:0.8rem" onclick="openAssignModal('${r.id}', '${escHtml(r.title)}')">
+                       <i class="fa-solid fa-user-plus"></i> ${assignLabel}
+                   </button>`
+                : `<span style="color:var(--secondary);font-weight:600;font-size:0.82rem">✅ Done</span>`;
+            return `
+            <tr>
+                <td data-label="Title">
+                    <div style="font-weight:600;cursor:pointer;color:var(--text)" onclick="showDetail('${r.id}')">${r.title}</div>
+                    <div style="font-size:0.78rem;color:var(--text-light);margin-top:2px">
+                        <i class="fa-solid fa-location-dot"></i> ${r.location} &nbsp;·&nbsp; ${r.createdDate || ''}
+                    </div>
+                </td>
+                <td data-label="Category"><span class="cat-badge">${cat.icon} ${cat.name}</span></td>
+                <td data-label="Status"><span class="status-badge status-${r.status}">${statusLabel(r.status)}</span></td>
+                <td data-label="Assigned" style="font-size:0.82rem">
+                    ${r.assignedTo
+                        ? `<span style="color:var(--primary);font-weight:600">${r.assignedTo}</span>`
+                        : `<span style="color:var(--danger);font-weight:600">⚠ Unassigned</span>`}
+                </td>
+                <td data-label="Action">${actionBtn}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    // ── Detail Modal ──────────────────────────────────────────────────────────
+    function showDetail(id) {
+        const r = reportsManager.getReport(id);
+        if (!r) return;
+        const cat = getCategoryInfo(r.category);
+        document.getElementById('detailTitle').textContent = r.title;
+        document.getElementById('detailId').textContent = '#' + r.id;
+        document.getElementById('detailBody').innerHTML = `
+            <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${cat.icon} ${cat.name}</span></div>
+            <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="status-badge status-${r.status}">${statusLabel(r.status)}</span></span></div>
+            <div class="detail-row"><span class="detail-label">Location</span><span class="detail-value">${r.location}</span></div>
+            <div class="detail-row"><span class="detail-label">Reported by</span><span class="detail-value">${r.submitterName || r.submittedBy || '—'}</span></div>
+            <div class="detail-row"><span class="detail-label">Submitted</span><span class="detail-value">${r.createdDate || '—'}</span></div>
+            <div class="detail-row"><span class="detail-label">Assigned to</span><span class="detail-value">${r.assignedTo || 'Not assigned'}</span></div>
+            ${r.assignedDate ? `<div class="detail-row"><span class="detail-label">Assigned on</span><span class="detail-value">${r.assignedDate}</span></div>` : ''}
+            <hr class="detail-divider">
+            <div class="detail-row" style="flex-direction:column"><span class="detail-label" style="margin-bottom:6px">Description</span><span class="detail-value" style="white-space:pre-wrap;line-height:1.6">${escHtml(r.description || '—')}</span></div>
+            ${r.resolutionNotes ? `<hr class="detail-divider"><div class="detail-row" style="flex-direction:column"><span class="detail-label" style="margin-bottom:6px;color:var(--secondary)">Staff Resolution Notes</span><span class="detail-value" style="white-space:pre-wrap">${escHtml(r.resolutionNotes)}</span></div>` : ''}
+            ${r.rejectionReason ? `<hr class="detail-divider"><div class="detail-row" style="flex-direction:column"><span class="detail-label" style="margin-bottom:6px;color:var(--danger)">Rejection Reason</span><span class="detail-value" style="white-space:pre-wrap">${escHtml(r.rejectionReason)}</span></div>` : ''}
+            ${r.approvedDate ? `<div class="detail-row"><span class="detail-label">Approved on</span><span class="detail-value">${r.approvedDate}</span></div>` : ''}
+            ${r.photoData ? `<hr class="detail-divider"><img src="${r.photoData}" style="width:100%;border-radius:8px;max-height:260px;object-fit:cover" alt="Photo">` : ''}
+        `;
+        document.getElementById('detailModal').classList.add('open');
+    }
+
+    function closeDetailModal() {
+        document.getElementById('detailModal').classList.remove('open');
+    }
+
+    document.getElementById('rejectModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeRejectModal(); });
+    document.getElementById('detailModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDetailModal(); });
+
+    // ── Toast notification ────────────────────────────────────────────────────
+    function showToast(msg) {
+        const t = document.createElement('div');
+        t.textContent = msg;
+        Object.assign(t.style, {
+            position:'fixed', bottom:'24px', left:'50%', transform:'translateX(-50%)',
+            background:'#1F2937', color:'white', padding:'12px 24px',
+            borderRadius:'8px', fontWeight:'600', fontSize:'0.9rem',
+            boxShadow:'0 4px 16px rgba(0,0,0,0.2)', zIndex:'9999',
+            transition:'opacity 0.3s'
+        });
+        document.body.appendChild(t);
+        setTimeout(() => { t.style.opacity='0'; setTimeout(() => t.remove(), 300); }, 2500);
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    function statusLabel(status) {
+        return {
+            submitted: '📬 Submitted',
+            assigned: '👤 Assigned',
+            in_progress: '🔧 In Progress',
+            pending_approval: '⏳ Pending Approval',
+            resolved: '✅ Resolved',
+            closed: '🔒 Closed'
+        }[status] || status;
+    }
+
+    function escHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function logout() {
+        if (confirm('Logout?')) auth.logout();
+    }
+</script>
+<script src="mobile.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>

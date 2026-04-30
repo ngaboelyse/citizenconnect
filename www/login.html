@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>CitizenConnect - Login</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#023469">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #023469;
+            --primary-dark: #00224A;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --bg: #F8F9FB;
+            --text: #1C1F23;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, #00224A 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1000px;
+            width: 100%;
+            align-items: center;
+        }
+
+        /* Left Side - Branding */
+        .branding {
+            color: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+        }
+
+        .branding h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .branding p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .features {
+            list-style: none;
+        }
+
+        .features li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            opacity: 0.95;
+            font-size: 1rem;
+        }
+
+        .features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Right Side - Login Form */
+        .login-form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-form-container h2 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .login-form-container > p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        /* Role Selection */
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .role-btn {
+            padding: 15px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .role-btn:hover {
+            border-color: var(--primary);
+            background: rgba(2, 52, 105, 0.05);
+        }
+
+        .role-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .role-btn i {
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        .role-btn span {
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 52, 105, 0.1);
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            color: var(--text-muted);
+        }
+
+        .remember-me input {
+            width: auto;
+            cursor: pointer;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+
+        .login-btn:hover {
+            background: #001a35;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 34, 74, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* Demo Credentials */
+        .demo-section {
+            background: #F3F4F6;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 24px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .demo-section h4 {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .demo-account {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .demo-account strong {
+            color: var(--primary);
+        }
+
+        .demo-account:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Messages */
+        .error-message {
+            background: #FEE2E2;
+            color: var(--danger);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #D1FAE5;
+            color: var(--secondary);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Tablet */
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .branding {
+                text-align: center;
+            }
+
+            .branding h1 {
+                font-size: 2rem;
+            }
+
+            .role-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .role-btn span {
+                display: inline;
+                margin-left: 8px;
+            }
+
+            .role-btn i {
+                display: inline;
+                margin-right: 8px;
+                margin-bottom: 0;
+            }
+
+            .login-form-container {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Mobile phone - hide branding, show only login card */
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+                align-items: stretch;
+                padding-top: env(safe-area-inset-top, 0px);
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+            }
+
+            .login-container {
+                grid-template-columns: 1fr;
+                gap: 0;
+                max-width: 100%;
+                padding: 0;
+                min-height: 100vh;
+                align-items: stretch;
+            }
+
+            .branding {
+                display: none;
+            }
+
+            .login-form-container {
+                border-radius: 0;
+                min-height: 100vh;
+                padding: 40px 24px 32px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .role-selector {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .role-btn {
+                padding: 10px 6px;
+                font-size: 0.75rem;
+            }
+
+            .role-btn i {
+                font-size: 1.2rem;
+                display: block;
+                margin: 0 0 4px;
+            }
+
+            .role-btn span {
+                display: block;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side - Branding -->
+        <div class="branding">
+            <div class="logo">
+                <i class="fa-solid fa-bullhorn"></i>
+                <span>IssueReport</span>
+            </div>
+            <h1>Smart City Complaint System</h1>
+            <p>Report issues, track resolutions, and improve your community infrastructure in real-time.</p>
+            
+            <ul class="features">
+                <li>Real-time issue tracking</li>
+                <li>Multi-role access control</li>
+                <li>Community engagement</li>
+                <li>Data-driven insights</li>
+            </ul>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="login-form-container">
+            <h2>Login</h2>
+            <p>Select your role and enter credentials</p>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <!-- Role Selection -->
+            <div class="role-selector">
+                <button class="role-btn active" data-role="user" onclick="selectRole('user')">
+                    <i class="fa-solid fa-user"></i>
+                    <span>User</span>
+                </button>
+                <button class="role-btn" data-role="staff" onclick="selectRole('staff')">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Staff</span>
+                </button>
+                <button class="role-btn" data-role="admin" onclick="selectRole('admin')">
+                    <i class="fa-solid fa-shield"></i>
+                    <span>Admin</span>
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember" style="margin: 0;">Remember me</label>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fa-solid fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+
+            <!-- Demo Credentials -->
+            <div class="demo-section">
+                <h4>🔐 Demo Credentials</h4>
+                <div class="demo-account">
+                    <strong>User:</strong> user@example.com / password123
+                </div>
+                <div class="demo-account">
+                    <strong>Staff:</strong> staff@example.com / password123
+                </div>
+                <div class="demo-account">
+                    <strong>Admin:</strong> admin@example.com / password123
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRole = 'user';
+
+        function selectRole(role) {
+            selectedRole = role;
+            
+            // Update UI
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-role="${role}"]`).classList.add('active');
+            
+            // Clear messages
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').classList.remove('show');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+            
+            // Demo credentials validation
+            const validCredentials = {
+                user: { email: 'user@example.com', password: 'password123' },
+                staff: { email: 'staff@example.com', password: 'password123' },
+                admin: { email: 'admin@example.com', password: 'password123' }
+            };
+
+            const credentials = validCredentials[selectedRole];
+            
+            // Validate credentials
+            if (email === credentials.email && password === credentials.password) {
+                // Create session
+                const sessionData = {
+                    role: selectedRole,
+                    email: email,
+                    name: selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1),
+                    loginTime: new Date().toISOString(),
+                    authenticated: true
+                };
+
+                // Save to localStorage
+                localStorage.setItem('userSession', JSON.stringify(sessionData));
+                
+                if (remember) {
+                    localStorage.setItem('rememberMe', 'true');
+                }
+
+                // Show success message
+                document.getElementById('successMessage').textContent = `✓ Welcome ${sessionData.name}! Redirecting...`;
+                document.getElementById('successMessage').classList.add('show');
+
+                // Redirect based on role
+                setTimeout(() => {
+                    if (selectedRole === 'user') {
+                        window.location.href = 'index.html';
+                    } else if (selectedRole === 'staff') {
+                        window.location.href = 'staff-dashboard.html';
+                    } else if (selectedRole === 'admin') {
+                        window.location.href = 'admin-dashboard.html';
+                    }
+                }, 1500);
+            } else {
+                // Show error
+                document.getElementById('errorMessage').textContent = '❌ Invalid email or password. Please try again.';
+                document.getElementById('errorMessage').classList.add('show');
+                document.getElementById('password').value = '';
+            }
+        }
+
+        // Check if already logged in
+        window.addEventListener('load', function() {
+            const session = localStorage.getItem('userSession');
+            if (session) {
+                const sessionData = JSON.parse(session);
+                // Already logged in, redirect to appropriate dashboard
+                if (sessionData.role === 'user') {
+                    window.location.href = 'index.html';
+                } else if (sessionData.role === 'staff') {
+                    window.location.href = 'staff-dashboard.html';
+                } else if (sessionData.role === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                }
+            }
+        });
+
+        // Auto-fill remember me
+        window.addEventListener('load', function() {
+            if (localStorage.getItem('rememberMe') === 'true') {
+                const email = localStorage.getItem('lastEmail');
+                if (email) {
+                    document.getElementById('email').value = email;
+                    document.getElementById('remember').checked = true;
+                }
+            }
+        });
+
+        // Save email on input
+        document.getElementById('email').addEventListener('change', function() {
+            if (document.getElementById('remember').checked) {
+                localStorage.setItem('lastEmail', this.value);
+            }
+        });
+    </script>
+    <script src="mobile.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
+</body>
+</html>
