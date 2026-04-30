@@ -124,14 +124,14 @@ function handleMapClick() {
 
 // Populate username in hero section
 function populateUserName() {
-    // Try to get username from auth system
     if (typeof auth !== 'undefined' && auth.isAuthenticated()) {
         const cleanEmail = auth.getCurrentUser().email;
         const userName = cleanEmail.split('@')[0].charAt(0).toUpperCase() + cleanEmail.split('@')[0].slice(1);
         const heroUserNameEl = document.getElementById('heroUserName');
-        if (heroUserNameEl) {
-            heroUserNameEl.textContent = userName;
-        }
+        if (heroUserNameEl) heroUserNameEl.textContent = userName;
+        // Populate desktop header email
+        const desktopEmail = document.getElementById('desktopUserEmail');
+        if (desktopEmail) desktopEmail.textContent = cleanEmail;
     }
 }
 

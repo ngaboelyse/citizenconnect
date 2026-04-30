@@ -31,7 +31,14 @@
                 <div class="avatar" data-toggle="auth-menu">
                     <i class="fa-solid fa-user"></i>
                 </div>
-                <!-- Auth Menu -->
+                <!-- Desktop: email + logout (hidden on mobile via CSS) -->
+                <div class="desktop-user-info" style="display:none; align-items:center; gap:12px;">
+                    <span id="desktopUserEmail" style="font-size:0.9rem; opacity:0.85;"></span>
+                    <button onclick="document.querySelector('.logout-btn').click()" style="padding:8px 16px; background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.3); border-radius:8px; cursor:pointer; font-weight:500;">
+                        <i class="fa-solid fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+                <!-- Auth Menu (mobile) -->
                 <div id="authMenu" style="display: none; position: absolute; top: 60px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; min-width: 200px;">
                     <div style="padding: 16px; border-bottom: 1px solid #E5E7EB;">
                         <div style="font-weight: 600;" id="userName"></div>
